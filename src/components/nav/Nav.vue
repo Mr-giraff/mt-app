@@ -25,6 +25,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  border-bottom: #e2e2e2 1px solid;
 }
 .nav-item {
   flex: 1;
