@@ -60,6 +60,9 @@
                   <span class="unit">/{{food.unit}}</span>
                 </p>
               </div>
+              <div class="cartcontrol-wrapper">
+                <app-cart-control :food="food"></app-cart-control>
+              </div>
             </li>
           </ul>
         </li>
@@ -67,11 +70,15 @@
     </div>
 
     <!-- 购物车 -->
+    <app-shopcart :poiInfo="poiInfo" :selectFoods="selectFoods"></app-shopcart>
   </div>
 </template>
 
 <script>
 import BScroll from 'better-scroll'
+import Shopcart from '../shopcart/Shopcart'
+import CartControl from '../cartcontrol/CartControl'
+
 export default {
   data() {
     return {
@@ -104,6 +111,7 @@ export default {
         this.scrollY = Math.abs(Math.round(pos.y))
         // console.log(this.scrollY)
       })
+
     },
     calculateHeight() {
       // 获取元素
@@ -126,8 +134,10 @@ export default {
       let foodlist = this.$refs.foodScroll.getElementsByClassName("food-list-hook")
       let element = foodlist[index]
       // console.log(element)
+
       // 滚动到对应元素的位置
       this.foodScroll.scrollToElement(element, 250)
+
     },
     calculateCount(spus) {
       let count = 0
@@ -138,6 +148,7 @@ export default {
       })
       return count
     }
+
   },
   created() {
     fetch("/api/goods")
@@ -192,6 +203,10 @@ export default {
       return foods
     }
   },
+  components:{
+    "app-shopcart":Shopcart,
+    "app-cart-control":CartControl
+  }
 }
 </script>
 
