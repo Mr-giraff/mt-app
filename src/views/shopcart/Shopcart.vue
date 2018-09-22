@@ -1,36 +1,44 @@
 <template>
-  <div class="shopcart-wrapper">
-    <!-- 底部左侧 -->
-    <div class="content-left">
-      <div
-          class="logo-wrapper"
-          :class="highligh"
-      >
+  <div class="shopcart" :class="{'highligh':totalCount>0}">
+    <div class="shopcart-wrapper">
+      <!-- 底部左侧 -->
+      <div class="content-left">
+        <div
+            class="logo-wrapper"
+            :class="highligh"
+            @click="toggleList"
+        >
         <span
             class="iconfont icon-shopping_cart logo"
             :class="highligh"
         ></span>
-        <i class="num" v-show="totalCount">{{totalCount}}</i>
+          <i class="num" v-show="totalCount">{{totalCount}}</i>
+        </div>
+        <div class="desc-wrapper">
+          <p class="total-price" v-show="totalPrice">
+            ￥{{totalPrice}}
+          </p>
+          <p
+              class="tip"
+              :class="highligh"
+          >另需{{poiInfo.shipping_fee_tip}}</p>
+        </div>
       </div>
-      <div class="desc-wrapper">
-        <p class="total-price" v-show="totalPrice">
-          ￥{{totalPrice}}
-        </p>
-        <p
-            class="tip"
-            :class="highligh"
-        >另需{{poiInfo.shipping_fee_tip}}</p>
+      <!-- 底部右侧 -->
+      <div class="content-right" :class="highligh">
+        {{payStr}}
       </div>
+      <!-- 购物车列表 -->
+      <app-shopcart-list v-bind="{poiInfo, selectFoods, listShow}"></app-shopcart-list>
+      <!--<app-shopcart-list :poiInfo="poiInfo" :selectFoods="selectFoods" :listShow="listShow"></app-shopcart-list>-->
     </div>
-    <!-- 底部右侧 -->
-    <div class="content-right" :class="highligh">
-      {{payStr}}
-    </div>
-
+    <div class="shopcart-mask" v-show="listShow" @click="toggleList"></div>
   </div>
 </template>
 
 <script>
+import ShopcartDetail from './ShopcartDetail'
+
 export default {
   props: {
     poiInfo: {
@@ -45,6 +53,16 @@ export default {
         return []
       }
     }
+  },
+  data() {
+    return {
+      fold: true,
+    }
+  },
+  methods: {
+    toggleList() {
+      this.fold = !this.fold;
+    },
   },
   computed: {
     highligh() {
@@ -71,7 +89,13 @@ export default {
       } else {
         return this.poiInfo.min_price_tip
       }
-    }
+    },
+    listShow() {
+      return !this.fold && this.totalCount > 0
+    },
+  },
+  components: {
+    'app-shopcart-list': ShopcartDetail,
   }
 }
 </script>
@@ -169,5 +193,14 @@ export default {
   color: white;
 }
 
+.shopcart .shopcart-mask{
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 98;
+  background: rgba(7,17,27,0.6);
+}
 
 </style>
